@@ -1,6 +1,7 @@
-streamlit==1.42.0
-dowhy==0.11.1
-econml==0.15.1
-pandas==2.2.0
-joblib==1.4.2
-scikit-learn==1.6.0
+streamlit
+dowhy
+econml
+pandas
+numpy
+joblib
+scikit-learn
