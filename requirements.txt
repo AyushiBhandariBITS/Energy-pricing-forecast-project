@@ -1,7 +1,7 @@
 streamlit
-dowhy
-econml
+dowhy == 0.8
+econml == 0.17.0
 pandas
 numpy
 joblib
-scikit-learn
+scikit-learn == 1.9.0
