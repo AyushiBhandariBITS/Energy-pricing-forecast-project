@@ -1,4 +1,47 @@
 import streamlit as st
+import sys
+import subprocess
+
+st.set_page_config(page_title="Environment Diagnostics", layout="wide")
+
+# --- ENV DIAGNOSTICS LAYER ---
+st.title("🧰 Environment & Dependency Diagnostics")
+
+# 1. Show Python runtime info
+st.subheader("Python Environment Info")
+st.code(f"Python Version: {sys.version}\nExecutable Path: {sys.executable}")
+
+# 2. Check for the specific packages you need
+packages_to_check = ["joblib", "pandas", "numpy", "dowhy", "econml", "scikit-learn"]
+status_data = []
+
+for pkg in packages_to_check:
+    # Handle scikit-learn import mapping variation
+    import_name = "sklearn" if pkg == "scikit-learn" else pkg
+    try:
+        __import__(import_name)
+        status_data.append({"Package": pkg, "Status": "✅ Installed"})
+    except ImportError:
+        status_data.append({"Package": pkg, "Status": "❌ MISSING"})
+
+st.subheader("Critical Package Audit")
+st.table(pd.DataFrame(status_data) if 'pd' in locals() else status_data)
+
+# 3. Print the raw pip freeze output to see everything installed
+st.subheader("Complete Installed Libraries (Pip Freeze)")
+try:
+    result = subprocess.run([sys.executable, "-m", "pip", "freeze"], capture_output=True, text=True)
+    st.code(result.stdout if result.stdout else "No output from pip freeze.")
+except Exception as e:
+    st.error(f"Could not run pip freeze: {e}")
+
+st.markdown("---")
+st.info("Stop here if debugging. Comment out the st.stop() below once packages show ✅ Installed.")
+st.stop() # Stops execution here so the missing imports below don't crash the app
+
+
+
+import streamlit as st
 import pandas as pd
 import time
 from decision_orchestrator import AbuDhabiDecisionOrchestrator
